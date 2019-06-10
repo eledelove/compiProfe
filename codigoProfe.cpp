@@ -260,6 +260,23 @@ public:
         }
     }
 
+    void tokenCadena(){
+
+        string cad;
+        cad = c;
+        c = in.get();
+
+        while((isalnum(c) || c == ' ') && c != '"')
+        {
+            cad += c;
+            c = in.get();
+        }
+        //if(c == '"') cad += c;
+        out<<"(TokenCadena,"<<cad<<")";
+
+        in.unget();
+    }
+
 
     void recuperaTokens(){
 
@@ -279,21 +296,32 @@ public:
             tipoToken[(char)i] = tipoToken['a'];
 
         tipoToken['/'] = &cAnalisisLexico::tokenComentario;
-        tipoToken['n'] = &cAnalisisLexico::tokenNumero;
-        tipoToken['+'] = tipoToken['n'];
-        tipoToken['-'] = tipoToken['n'];
+        tipoToken['+'] = &cAnalisisLexico::tokenNumero;
+        tipoToken['-'] = tipoToken['+'];
 
-        /*for(int i = 0; i <= 9; i++)
-            tipoToken[(char)i] = tipoToken['n'];*/
+        tipoToken['"'] = &cAnalisisLexico::tokenCadena;
+        tipoToken[' '] = tipoToken['"'];
 
+
+        for(int i = 48; i <= 57; i++)
+            tipoToken[(char)i] = tipoToken['+'];
+
+        map<char, punteroFuncionToken>::iterator it;
         while(!in.eof())
         {
-            
+
             c = in.get();
-            if(isdigit(c)) (this->*tipoToken['n'])();
-            
+
+            if(in.eof() || in.fail()) break;
+            /*if(isdigit(c)) (this->*tipoToken['n'])();
+
             if(c == '(' || c == ';' || c == '>' || c == '<' || c == '{' || isalpha(c) || c == '_' || c == '/' || c == '+' || c == '-')
-                (this->*tipoToken[c])();
+                (this->*tipoToken[c])();*/
+
+            it=tipoToken.find(c);
+            if(it!=tipoToken.end())
+            (this->*tipoToken[c])();
+
             else
                 out<<c;
         }
