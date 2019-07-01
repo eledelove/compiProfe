@@ -193,7 +193,13 @@ public:
     }
 
     void tokenCorIzq(){
-        out<<"TokLlave{"<<endl;
+        out<<"TokLlave{";
+    }
+    void tokenParenIzq(){
+        out<<"TokParenIzq";
+    }
+    void tokenParenDer(){
+        out<<"TokParenDer";
     }
 
     void tokenNumero(){
@@ -260,7 +266,7 @@ public:
         }
     }
 
-    void tokenCadena(){
+    /*void tokenCadena(){
 
         string cad;
         cad = c;
@@ -275,7 +281,7 @@ public:
         out<<"(TokenCadena,"<<cad<<")";
 
         in.unget();
-    }
+    }*/
 
 
     void recuperaTokens(){
@@ -284,6 +290,8 @@ public:
 
         tipoToken['('] = &cAnalisisLexico::tokenPI;
         tipoToken[';'] = &cAnalisisLexico::tokenPyC;
+        tipoToken['('] = &cAnalisisLexico::tokenParenIzq;
+        tipoToken[')'] = &cAnalisisLexico::tokenParenDer;
         tipoToken['<'] = &cAnalisisLexico::tokenMenor;
         tipoToken['>'] = &cAnalisisLexico::tokenMayor;
         tipoToken['{'] = &cAnalisisLexico::tokenCorIzq;
@@ -299,8 +307,8 @@ public:
         tipoToken['+'] = &cAnalisisLexico::tokenNumero;
         tipoToken['-'] = tipoToken['+'];
 
-        tipoToken['"'] = &cAnalisisLexico::tokenCadena;
-        tipoToken[' '] = tipoToken['"'];
+       //x tipoToken['"'] = &cAnalisisLexico::tokenCadena;
+        //tipoToken[' '] = tipoToken['"'];
 
 
         for(int i = 48; i <= 57; i++)
@@ -313,10 +321,6 @@ public:
             c = in.get();
 
             if(in.eof() || in.fail()) break;
-            /*if(isdigit(c)) (this->*tipoToken['n'])();
-
-            if(c == '(' || c == ';' || c == '>' || c == '<' || c == '{' || isalpha(c) || c == '_' || c == '/' || c == '+' || c == '-')
-                (this->*tipoToken[c])();*/
 
             it=tipoToken.find(c);
             if(it!=tipoToken.end())
